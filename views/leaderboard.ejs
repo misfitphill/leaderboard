@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Misfit Leaderboard</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<!--STYLES-->
+		<link rel="stylesheet" href="/styles/bootstrap.css">
+		<link rel="stylesheet" href="/styles/importer.css">
+		<!--STYLES END-->
+
+	</head>
+	<body ng-app="LeaderboardModule" ng-controller="LeaderboardController">
+		<h1>Leaderboard</h1>
+
+		<form ng-submit="getUserData()">
+			<input type="submit" value="Submit"/>
+		</form>
+
+		<h3>Data:</h3>
+		<table>
+			<tbody ng:repeat='user in users'>
+				<tr>
+					<td>{{user.points}}</td>
+					<td>{{user.steps}}</td>
+					<td>{{user.calories}}</td>
+					<td>{{user.distance}}</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<!--SCRIPTS-->
+		<script src="/js/dependencies/sails.io.js"></script>
+		<script src="/js/dependencies/angular.min.js"></script>
+		<script src="/js/public/leaderboard/LeaderboardModule.js"></script>
+		<script src="/js/public/leaderboard/LeaderboardController.js"></script>
+		<!--SCRIPTS END-->
+	</body>
+</html>
