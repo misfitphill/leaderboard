@@ -303,6 +303,17 @@ passport.loadStrategies = function () {
         self.use(new Strategy(self.protocols.bearer.authorize));
       }
       
+    } else if (key === 'misfit'){
+          Strategy = strategies[key].strategy;
+          self.use(new Strategy(
+            strategies[key].options,
+            function(accessToken, refreshToken, profile, done) {
+              User.findOrCreate({id: profile.userId}, function(err, user){
+                //save access token
+                user.accessToken = accessToken;
+                return done(err, user);
+              });
+            }));
     } else {
       var protocol = strategies[key].protocol
         , callback = strategies[key].callback;
