@@ -8,6 +8,10 @@
 var MisfitAPI = require('misfit-cloud-api');
 var passport = require('passport');
 var fs = require('fs');
+var https = require('https');
+
+var dataType = ''; //the type of data that was last requested.
+				   //should be one of ['profile','goal','device','session','sleep']
 
 module.exports = {
 
@@ -21,6 +25,22 @@ module.exports = {
 		res.redirect('/user/login');
 	},
 
+	notification: function(req, res){
+		//subscrition handler
+		var subscribeURL = req.body['SubscribeURL'];
+		if(subscribeURL){
+			https.get(subscribeURL, function(res){
+				console.log("Got response: " + res.statusCode);
+			}).on('error', function(err){
+				console.log("Got error: " + err.message);
+			});
+		}
+		//if not a subscription message, its probably a notification
+		else{
+			var message = req.body['Message'];
+		}
+	},
+
 	getsummary: function(req, res){
 		if (req.session.authenticated){
 			var user = req.session.user;
@@ -28,8 +48,8 @@ module.exports = {
 
 			//setup misfitapi
 			var misfitApi = new MisfitAPI({
-      			clientID: '',
-      			clientSecret: ''
+      			clientID: 'Erp5w5c9oxSl4WxL',
+      			clientSecret: '5U43AGcDDZQN486h7XdcmcvDv4oXr88J'
 			});
 
 			//get summary
