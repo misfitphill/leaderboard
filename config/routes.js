@@ -36,6 +36,14 @@ module.exports.routes = {
     view: 'homepage'
   }*/
   'GET /leaderboard': {view: 'leaderboard'},
+  //'GET /user/login': 'UserController.misfit',
+  'get /login': 'AuthController.login',
+  'get /logout': 'AuthController.logout',
+
+  'get /auth/:provider': 'AuthController.provider',
+  'get /auth/:provider/callback': 'AuthController.callback',
+  'get /auth/:provider/:action': 'AuthController.callback',
+
   'GET /user/testdata': 'UserController.testdata'
 
   /***************************************************************************
