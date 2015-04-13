@@ -11,7 +11,7 @@ var fs = require('fs');
 var https = require('https');
 
 var dataType = ''; //the type of data that was last requested.
-				   //should be one of ['profile','goal','device','session','sleep']
+				   //should be one of ['profiles','goals','devices','sessions','sleep']
 
 module.exports = {
 
@@ -56,7 +56,7 @@ module.exports = {
 			misfitApi.getSummary({
 				token: accessToken,
 				start_date:'2015-01-17',
-				end_date:'2015-01-23',
+				end_date:'2015-01-17',
 				detail: true
 			}, function(err,result){
 				if(err || !result){
@@ -64,8 +64,10 @@ module.exports = {
 					return callback(err);
 				}
 
+				dataType = 'summary'
+
 				//load test user data
-				var testUsers = genTestData(result.summary, 3);
+				var testUsers = genTestData(result.summary, 30);
 				res.json({"MisfitUser":result.summary,"TestUsers":testUsers});
 			});
 		}

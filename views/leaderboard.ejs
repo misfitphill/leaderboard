@@ -6,36 +6,49 @@
 		<!--STYLES-->
 		<link rel="stylesheet" href="/styles/bootstrap.css">
 		<link rel="stylesheet" href="/styles/importer.css">
+		<link rel="stylesheet" href="/styles/leaderboard.css">
+		<link rel="stylesheet" href="/styles/ui-grid-stable.css">
+		<link rel="stylesheet" href="/styles/ui-grid-unstable.min.css">
 		<!--STYLES END-->
 
 	</head>
-	<body ng-app="LeaderboardModule" ng-controller="LeaderboardController">
-		<h1>Leaderboard</h1>
+	<body ng-app="LeaderboardModule" class="row">
+		<div class="col-sm-12">
+			<h1>Leaderboard</h1>
 
-		<form ng-submit="getUserData()">
-			<input type="submit" value="Submit"/>
-		</form>
+			<div class="col-md-6">
+				<div ng-controller="DropdownCtrl">
+				    <div class="btn-group" dropdown is-open="status.isopen">
+				      <button type="button" class="btn btn-primary dropdown-toggle" dropdown-toggle ng-disabled="disabled">
+				        {{dropdownTxt}}    <span class="caret"></span>
+				      </button>
+				      <ul class="dropdown-menu" role="menu">
+				      	<li ng-repeat="field in fields" ng-click="setDropdownTxt(field)">{{field}}</li>
+				      </ul>
+				    </div>
+				</div>
+				<div ng-controller="LeaderboardController">
+					<!--<div class="chart" ac-chart="'bar'", ac-data="chartData" ac-config="acConfig"></div>-->
 
-		<h3>Is authed: {{msg1}} </h3>
-		<h3>User: {{msg2}}</h3>
-
-		<h3>Data:</h3>
-		<table>
-			<tbody ng:repeat='user in users'>
-				<tr>
-					<td>{{user.points}}</td>
-					<td>{{user.steps}}</td>
-					<td>{{user.calories}}</td>
-					<td>{{user.distance}}</td>
-				</tr>
-			</tbody>
-		</table>
+		  				<div ui-grid="gridOptions" class="myGrid"></div>
+				</div>
+				<p>{{gridOptions.selectedItems}}</p>
+			</div>
+		</div>
 
 		<!--SCRIPTS-->
 		<script src="/js/dependencies/sails.io.js"></script>
 		<script src="/js/dependencies/angular.min.js"></script>
+		<script src="/js/dependencies/d3.min.js"></script>
+		<script src="/js/dependencies/angular-charts.min.js"></script>
+		<script src="/js/dependencies/jquery-2.1.3.min.js"></script>
+		<script src="/js/dependencies/ui-bootstrap-0.12.1.min.js"></script>
+		<script src="/js/dependencies/ui-grid-stable.min.js"></script>
+		<script src="/js/dependencies/ui-grid-unstable.min.js"></script>
 		<script src="/js/public/leaderboard/LeaderboardModule.js"></script>
 		<script src="/js/public/leaderboard/LeaderboardController.js"></script>
+		<script src="/js/public/leaderboard/DropdownCtrl.js"></script>
+		<script src="/js/public/leaderboard/ProgressCtrl.js"></script>
 		<!--SCRIPTS END-->
 	</body>
 </html>
