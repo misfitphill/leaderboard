@@ -48,8 +48,8 @@ module.exports = {
 
 			//setup misfitapi
 			var misfitApi = new MisfitAPI({
-      			clientID: 'Erp5w5c9oxSl4WxL',
-      			clientSecret: '5U43AGcDDZQN486h7XdcmcvDv4oXr88J'
+      			clientID: '',
+      			clientSecret: ''
 			});
 
 			//get summary
