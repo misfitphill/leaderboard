@@ -10,7 +10,7 @@ angular.module('LeaderboardModule').controller('LeaderboardController', ['$scope
   	});
 
 	$scope.setLeaderboardData = function(attr){
-		var filtered = getAttrData($scope.users,attr);
+		var filtered = getAttrDataTotal($scope.users,attr);
 		
 		var colDefs = [{field:'username'}];
 		var colObj = {};
@@ -25,7 +25,6 @@ angular.module('LeaderboardModule').controller('LeaderboardController', ['$scope
 	}
 
 	$scope.$on('updateAttrEvent', function(event, args){
-		//console.log(args['attr']);
 		$scope.setLeaderboardData(args['attr']);
 	});
 
@@ -72,11 +71,26 @@ ONLY WORKS FOR SINGLE DATE RIGHT NOW
 @param data (JSON) - a JSON object containing the misfit and test user data
 @param attr (string) - a string
 */   
-var getAttrData = function(data, attr){
+var getAttrData = function(date, data, attr){
+	var dateIdx = -1; //the given date will be at the same index for each user
+
+	//find the index of the given date
+	//THIS CAN BE DONE MORE EFFICEINTLY...later
+	for(var i = 0; i < data['MisfitUser'].length; i++){
+		if(data['MisfitUser'][i]['date'] == date){
+			dateIdx = i;
+			break;
+		}
+	}
+	if(dateIdx == -1){
+		console.log("ERROR: GIVEN DATE NOT IN RANGE");
+		return
+	}
+
 	var vals = [];
 	var obj = {}
 	obj['username'] = "MisfitUser";
-	obj[attr] = data['MisfitUser'][0][attr];
+	obj[attr] = data['MisfitUser'][dateIdx][attr];
 	vals.push(obj);
 
 	var testUsers = data['TestUsers'];
@@ -85,7 +99,7 @@ var getAttrData = function(data, attr){
 		Object.keys(testUsers[i]).forEach(function(key){
 			var obj = {}
 			obj['username'] = key;
-			obj[attr] = testUsers[i][key][0][attr];
+			obj[attr] = testUsers[i][key][dateIdx][attr];
 			vals.push(obj);
 		});		
 	}
@@ -93,6 +107,37 @@ var getAttrData = function(data, attr){
 	console.log(JSON.stringify(vals));
 	return vals;
 };
+
+var getAttrDataTotal = function(data, attr){
+	var vals = [];
+	var obj = {}
+	obj['username'] = "MisfitUser";
+	obj[attr] = sumUserAttr(data['MisfitUser'],attr);
+	vals.push(obj);
+
+	var testUsers = data['TestUsers'];
+
+	for(var i = 0; i < testUsers.length; i++){
+		Object.keys(testUsers[i]).forEach(function(key){
+			var obj = {}
+			obj['username'] = key;
+			obj[attr] = sumUserAttr(testUsers[i][key],attr);
+			vals.push(obj);
+		});		
+	}
+
+	console.log(JSON.stringify(vals));
+	return vals;
+}
+
+var sumUserAttr = function(data, attr){
+	var sum = 0;
+	for(var i = 0; i < data.length; i++){
+		var val = data[i][attr];
+		sum += val;
+	}
+	return (sum * 1000) / 1000;
+}
 
 /*
 var tuples = [];
