@@ -53,10 +53,13 @@ module.exports = {
 			});
 
 			//get summary
+			var dates = getMonthRange();
+			console.log("today:" + dates['today']);
+			console.log("monthAgo:" + dates['monthAgo']);
 			misfitApi.getSummary({
 				token: accessToken,
-				start_date:'2015-01-17',
-				end_date:'2015-01-17',
+				start_date: dates['monthAgo'],
+				end_date: dates['today'],
 				detail: true
 			}, function(err,result){
 				if(err || !result){
@@ -67,7 +70,7 @@ module.exports = {
 				dataType = 'summary'
 
 				//load test user data
-				var testUsers = genTestData(result.summary, 30);
+				var testUsers = genTestData(result.summary, 20);
 				res.json({"MisfitUser":result.summary,"TestUsers":testUsers});
 			});
 		}
@@ -78,6 +81,47 @@ module.exports = {
 	}
 	
 };
+
+var getMonthRange = function(){
+	var today = new Date();
+	var dd = today.getDate();
+	var mm = today.getMonth()+1;
+	var yyyy = today.getFullYear();
+	var daysInMonth = [31,30,31,30,31,30,31,31,30,31,30,31];
+	var monthAgo = mm - 1;
+	var monthAgoDay = dd;
+	
+	if(monthAgo == 0)
+		monthAgo = 12;
+
+	//make sure range is no more than 31 days
+	var numDays = dd + (daysInMonth[monthAgo-1] - monthAgoDay + 1);
+	console.log("numdays: " + (daysInMonth[monthAgo-1] - monthAgoDay) );
+	if(numDays > 31){
+		for(var i = 0; i < (numDays-31); i++)
+			monthAgoDay++;	
+	}
+	
+
+	//add leading zero if single digit
+	if(monthAgo < 10)
+		monthAgo='0'+monthAgo;
+
+	if(monthAgoDay<10)
+		monthAgoDay = '0' + monthAgoDay;
+
+	if(dd<10) {
+	    dd='0'+dd
+	} 
+
+	if(mm<10) {
+	    mm='0'+mm
+	} 
+
+	today = yyyy + '-' + mm + '-' + dd;
+	var monthAgo = yyyy + '-' + monthAgo + '-' + monthAgoDay;
+	return {today:today,monthAgo:monthAgo};
+}
 
 /*
 Generate random data for fake users
