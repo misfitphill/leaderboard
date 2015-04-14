@@ -36,16 +36,11 @@ module.exports.routes = {
     view: 'homepage'
   }*/
   'GET /leaderboard': {view: 'leaderboard'},
-  //'GET /user/login': 'UserController.misfit',
-  'get /login': 'AuthController.login',
-  'get /logout': 'AuthController.logout',
-
+  'GET /': 'AuthController.loginCheck',
   'POST /user/notification': 'UserController.notification',
-
-  'get /auth/:provider': 'AuthController.provider',
-  'get /auth/:provider/callback': 'AuthController.callback',
-  'get /auth/:provider/:action': 'AuthController.callback',
-
+  'GET /auth/:provider': 'AuthController.provider',
+  'GET /auth/:provider/callback': 'AuthController.callback',
+  'GET /auth/:provider/:action': 'AuthController.callback',
   'GET /user/getsummary': 'UserController.getsummary'
 
   /***************************************************************************

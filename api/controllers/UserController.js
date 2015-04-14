@@ -10,9 +10,6 @@ var passport = require('passport');
 var fs = require('fs');
 var https = require('https');
 
-var dataType = ''; //the type of data that was last requested.
-				   //should be one of ['profiles','goals','devices','sessions','sleep']
-
 module.exports = {
 
 	login: function(req, res){
@@ -25,6 +22,12 @@ module.exports = {
 		res.redirect('/user/login');
 	},
 
+	/*
+	Handles hooking up to the Misfit subscriptionAPI.
+
+	TODO:
+	Update user models when notification is received.
+	*/
 	notification: function(req, res){
 		//subscrition handler
 		var subscribeURL = req.body['SubscribeURL'];
@@ -38,9 +41,15 @@ module.exports = {
 		//if not a subscription message, its probably a notification
 		else{
 			var message = req.body['Message'];
+
 		}
 	},
 
+	/*
+	Uses the MisfitAPI to get basic user data over a given date range.
+	Gets points, steps, calories, activity calories, and distance for each
+	date in the given range.
+	*/
 	getsummary: function(req, res){
 		if (req.session.authenticated){
 			var user = req.session.user;
@@ -48,14 +57,12 @@ module.exports = {
 
 			//setup misfitapi
 			var misfitApi = new MisfitAPI({
-      			clientID: '',
-      			clientSecret: ''
+      			clientID: 'Erp5w5c9oxSl4WxL',
+      			clientSecret: '5U43AGcDDZQN486h7XdcmcvDv4oXr88J'
 			});
 
 			//get summary
 			var dates = getMonthRange();
-			console.log("today:" + dates['today']);
-			console.log("monthAgo:" + dates['monthAgo']);
 			misfitApi.getSummary({
 				token: accessToken,
 				start_date: dates['monthAgo'],
@@ -67,11 +74,10 @@ module.exports = {
 					return callback(err);
 				}
 
-				dataType = 'summary'
-
 				//load test user data
-				var testUsers = genTestData(result.summary, 20);
-				res.json({"MisfitUser":result.summary,"TestUsers":testUsers});
+				var genUsers = genTestData(result.summary, 20);
+				genUsers['MisfitUser'] = result.summary;
+				res.json(genUsers);
 			});
 		}
 		else{
@@ -82,6 +88,13 @@ module.exports = {
 	
 };
 
+/*
+Returns an object storing two dates represented as strings.
+'today' - stores todays date in the form 'yyyy-mm-dd'
+'monthAgo' - stores a date roughly one month ago from today's date.
+			Because misfitAPI places a max date span of 31 days,
+			this is at most 31 days away.
+*/
 var getMonthRange = function(){
 	var today = new Date();
 	var dd = today.getDate();
@@ -132,7 +145,7 @@ Generate random data for fake users
 */
 var genTestData = function(userData,num){
 	var numDays = userData.length;
-	var testUsers = [];
+	var testUsers = {};
 
 	for(var i = 0; i < num; i++){
 		var tUserData = [];
@@ -149,9 +162,7 @@ var genTestData = function(userData,num){
 			//add day_data to this TEST user's data
 			tUserData.push(dayData);
 		}
-		var newObj = {};
-		newObj["User" + (i + 1)] = tUserData;
-		testUsers.push(newObj);
+		testUsers["User" + (i + 1)] = tUserData;
 	}
 	return testUsers;
 }

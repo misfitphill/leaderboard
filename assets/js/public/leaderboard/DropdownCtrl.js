@@ -13,12 +13,10 @@ angular.module('LeaderboardModule').controller('DropdownCtrl', ['$scope', 'UserS
 	$scope.dropdownTxt = "Points";
 	$scope.setDropdownTxt = function(txt){
 		$scope.dropdownTxt = txt;
-		console.log("changed dropdown text");
 		UserService.updateAttr(txt.toLowerCase());
 	};
 
 	$scope.$on("dropdownEvent", function(event, args){
-		console.log(args['fields']);
 		$scope.fields = args['fields'];
 	});
 

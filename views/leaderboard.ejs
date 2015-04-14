@@ -4,35 +4,42 @@
 		<title>Misfit Leaderboard</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 		<!--STYLES-->
+		<link rel="stylesheet" href="/styles/angular-chart.css">
 		<link rel="stylesheet" href="/styles/bootstrap.css">
 		<link rel="stylesheet" href="/styles/importer.css">
 		<link rel="stylesheet" href="/styles/leaderboard.css">
 		<link rel="stylesheet" href="/styles/ui-grid-stable.css">
-		<link rel="stylesheet" href="/styles/ui-grid-unstable.min.css">
 		<!--STYLES END-->
 
 	</head>
-	<body ng-app="LeaderboardModule" class="row">
-		<div class="col-sm-12">
+	<body ng-app="LeaderboardModule" class="row" ng-cloak>
+		<div class="col-md-12">
 			<h1>Leaderboard</h1>
 
 			<div class="col-md-6">
-				<div ng-controller="DropdownCtrl">
-				    <div class="btn-group" dropdown is-open="status.isopen">
-				      <button type="button" class="btn btn-primary dropdown-toggle" dropdown-toggle ng-disabled="disabled">
-				        {{dropdownTxt}}    <span class="caret"></span>
-				      </button>
-				      <ul class="dropdown-menu" role="menu">
-				      	<li ng-repeat="field in fields" ng-click="setDropdownTxt(field)">{{field}}</li>
-				      </ul>
-				    </div>
+				<div id="toolbar">
+					<div ng-controller="DropdownCtrl">
+					    <div class="btn-group" dropdown is-open="status.isopen">
+					      <button type="button" class="btn btn-primary dropdown-toggle" dropdown-toggle ng-disabled="disabled">
+					        {{dropdownTxt}}    <span class="caret"></span>
+					      </button>
+					      <ul class="dropdown-menu" role="menu">
+					      	<li ng-repeat="field in fields" ng-click="setDropdownTxt(field)">{{field}}</li>
+					      </ul>
+					    </div>
+					</div>
 				</div>
+				
 				<div ng-controller="LeaderboardController">
-					<!--<div class="chart" ac-chart="'bar'", ac-data="chartData" ac-config="acConfig"></div>-->
-
-		  				<div ui-grid="gridOptions" class="myGrid"></div>
+					<h2>{{dateRange}}</h2>
+		  				<div ui-grid="gridOptions" ui-grid-selection class="myGrid"></div>
 				</div>
-				<p>{{gridOptions.selectedItems}}</p>
+				<p>{{selectedItems}}</p>
+			</div>
+			<div class="col-md-6" ng-controller="ChartCtrl">
+				<div google-chart chart="chartObject" style="height:700px; width:100%;"></div>
+					<!--<div class="chart" ac-chart="'bar'", ac-data="chartData" ac-config="chartConfig"></div>
+					<canvas id="bar" class="chart chart-bar" data="data" labels="labels"></canvas> -->
 			</div>
 		</div>
 
@@ -40,13 +47,13 @@
 		<script src="/js/dependencies/sails.io.js"></script>
 		<script src="/js/dependencies/angular.min.js"></script>
 		<script src="/js/dependencies/d3.min.js"></script>
-		<script src="/js/dependencies/angular-charts.min.js"></script>
 		<script src="/js/dependencies/jquery-2.1.3.min.js"></script>
+		<script src="/js/dependencies/ng-google-chart.js"></script>
 		<script src="/js/dependencies/ui-bootstrap-0.12.1.min.js"></script>
-		<script src="/js/dependencies/ui-grid-stable.min.js"></script>
-		<script src="/js/dependencies/ui-grid-unstable.min.js"></script>
+		<script src="/js/dependencies/ui-grid.js"></script>
 		<script src="/js/public/leaderboard/LeaderboardModule.js"></script>
 		<script src="/js/public/leaderboard/LeaderboardController.js"></script>
+		<script src="/js/public/leaderboard/ChartCtrl.js"></script>
 		<script src="/js/public/leaderboard/DropdownCtrl.js"></script>
 		<script src="/js/public/leaderboard/ProgressCtrl.js"></script>
 		<!--SCRIPTS END-->

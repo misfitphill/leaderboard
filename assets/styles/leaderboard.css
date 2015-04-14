@@ -1,0 +1,31 @@
+@font-face {
+    font-family: 'Gotham';
+    src: url('../fonts/Gotham/Gotham-Medium.otf');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+body{
+	font-family: 'Gotham';
+}
+
+.chart{
+	width:700px;
+	height:500px;
+}
+
+.myGrid {
+    width: 700px;
+    height: 500px;
+}
+
+#toolbar{
+	margin: 20px;
+}
+
+.dropdown-menu li{
+	font-size: 14pt;
+	margin-left: 5px;
+	cursor: pointer;
+}

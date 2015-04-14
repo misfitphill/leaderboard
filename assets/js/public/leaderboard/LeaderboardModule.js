@@ -1,29 +1,43 @@
-var app = angular.module('LeaderboardModule', ['ui.bootstrap','angularCharts','ui.grid']);
+var app = angular.module('LeaderboardModule', ['ui.bootstrap','googlechart','ui.grid','ui.grid.selection']);
 
 app.factory("UserService", function($http) {
   	var userData;
   	var fields = [];
   	var lastGET;
+  	var curAttr = 'points';
   	var scopes = {};
   	return {
+  		/*
+		provides access to the scopes of each controller that is set with this funciton.
+  		*/
   		setScope: function(controller, scope){
 	  		scopes[controller] = scope;
 	  	},
 
+	  	/*
+		sets up the leaderboard grid display and populates the grid with data retrieved from
+		the MisfitAPI.
+	  	*/
 	  	getSummary: function(){
 	  		scopes['leaderboard'].gridOptions = {
             	enableSorting: false,
             	enableRowSelection: true,
             	enableHighlighting: true,
-            	pinSelectionCheckbox: true,
+            	noUnselect: true,
             	multiSelect: false,
-            	afterSelectionChange: function() {
-            		alert("changed");
-        		},
+            	showSelectionCheckbox: false,
             	onRegisterApi: function(gridApi) {
       				scopes['leaderboard'].gridApi = gridApi;
+
+      				//handles selection changes
+      				scopes['leaderboard'].gridApi.selection.on.rowSelectionChanged(scopes['leaderboard'],function(rows){
+            			scopes['leaderboard'].selectedItems = gridApi.selection.getSelectedRows();
+            			//send ONLY the data for the selected user to chart
+            			scopes['chart'].$emit('userSelectEvent',{data:userData[scopes['leaderboard'].selectedItems[0]['username']],attr:curAttr});
+        			});
     			}
        		};
+
 	  		if(lastGET !== "summary"){
 				var promise = $http.get('/user/getsummary').then(function(response){
 					 userData = response.data;
@@ -33,7 +47,7 @@ app.factory("UserService", function($http) {
 				     //send the fields to populate the dropdown
 				     var fields = [];
 					Object.keys(userData["MisfitUser"][0]).forEach(function(key){
-						if(key !== 'date')
+						if(key !== 'date' && key !== 'activityCalories')
 							fields.push(key.charAt(0).toUpperCase() + key.slice(1));
 					});
 					scopes['dropdown'].$emit('dropdownEvent',{fields:fields});
@@ -47,39 +61,18 @@ app.factory("UserService", function($http) {
 			}
 	  	},
 
+	  	/*
+		Called when the dropdown menu is changed. When this happens,
+		each of the subscribed controllers should be notified in order to display
+		the correct data.
+	  	*/
 	    updateAttr: function(attr){
-	    	console.log("in service attr");
+	    	curAttr = attr;
 	    	scopes['leaderboard'].$emit('updateAttrEvent',{attr:attr});
+	    	scopes['chart'].$emit('updateAttrEvent',{attr:attr});
 	    }
     };
 });
 
-/*app.controller("LeaderboardController", function($scope, UserService) {
-  UserService.getSummary().then(function(data){
-  	$scope.users = JSON.stringify(data);
-  })
-});
 
-app.controller("DropdownCtrl", function($scope, UserService) {
-  $scope.users = UserService.getSummary();
-});
-*/
-
-/*var sharedServicesModule = angular.module('sharedServices',[]);
-sharedServices.service('UserService', function($http){
-	getSummary: function(){
-		var promise = $http.get('/user/getsummary').then(function(response){
-			 return response;
-		});
-		return promise;
-  	}
-});
-
-var leaderboardModule = angular.module('leaderboard',['sharedServices']);
-leaderboardModule.service('leaderboardService', function(UserService){UserService.getSummary()});
-leaderboardModule.controller('leaderboardCtrl', function($scope, leaderboardService){
-
-});
-
-var app = angular.module('app', ['sharedServices', 'login']);*/
 

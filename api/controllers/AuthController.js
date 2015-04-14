@@ -6,6 +6,14 @@
  * the basics of Passport.js to work.
  */
 var AuthController = {
+
+  loginCheck: function(req, res){
+    if(req.session.authenticated){
+      res.redirect('/leaderboard');
+    }else{
+      res.redirect('/auth/misfit');
+    }
+  },
   /**
    * Render the login page
    *
