@@ -3,28 +3,15 @@ var User = {
   schema: true,
 
   attributes: {
-    misfitId  : { type: 'string', unique: true },
-    email     : { type: 'email',  unique: true },
-    passports : { collection: 'Passport', via: 'user' }
+    username : { type: 'string', unique: true, required: true },
+    data: {type:'string', required: true}
+  },
+
+  massCreate: function (userData) {
+    Object.keys(userData).forEach(function(key){
+      //User.create({username:key, data:JSON.stringify(userData[key])});
+    });
   }
 };
 
 module.exports = User;
-/*
-  	userId:{
-  		type: 'string',
-  		required: true,
-  		unique: true
-  	},
-  	firstName:{
-  		type: 'string',
-  		required: true
-  	},
-  	lastName:{
-  		type: 'string',
-  		required: true
-  	},
-  	gender: {
-  		type: 'string',
-  		required: true
-  	}*/

@@ -33,7 +33,9 @@ app.factory("UserService", function($http) {
       				scopes['leaderboard'].gridApi.selection.on.rowSelectionChanged(scopes['leaderboard'],function(rows){
             			scopes['leaderboard'].selectedItems = gridApi.selection.getSelectedRows();
             			//send ONLY the data for the selected user to chart
-            			scopes['chart'].$emit('userSelectEvent',{data:userData[scopes['leaderboard'].selectedItems[0]['username']],attr:curAttr});
+            			scopes['chart'].$emit('userSelectEvent',{data:userData[scopes['leaderboard'].selectedItems[0]['username']],
+            												attr:curAttr,
+            												username:scopes['leaderboard'].selectedItems[0]['username']});
         			});
     			}
        		};
@@ -46,10 +48,12 @@ app.factory("UserService", function($http) {
 				     //inform DropdownCtrl that the user data has been retrieved and
 				     //send the fields to populate the dropdown
 				     var fields = [];
-					Object.keys(userData["MisfitUser"][0]).forEach(function(key){
-						if(key !== 'date' && key !== 'activityCalories')
-							fields.push(key.charAt(0).toUpperCase() + key.slice(1));
-					});
+						Object.keys(userData[Object.keys(userData)[0]][0]).forEach(function(key){
+							if(key !== 'date' && key !== 'activityCalories')
+								fields.push(key.charAt(0).toUpperCase() + key.slice(1));
+						});
+						
+					
 					scopes['dropdown'].$emit('dropdownEvent',{fields:fields});
 
 					//return the user data

@@ -8,8 +8,8 @@ angular.module('LeaderboardModule').controller('LeaderboardController', ['$scope
 	UserService.getSummary().then(function(data){
 		$scope.users = data;
 		$scope.setLeaderboardData('points');
-
-		var dateRange = data['MisfitUser'][0]['date'] + " through " + data['MisfitUser'][data['MisfitUser'].length-1]['date'];
+		console.log(Object.keys(data)[0]);
+		var dateRange = data[ Object.keys(data)[0] ][0]['date'] + " to " + data[Object.keys(data)[0]][data[Object.keys(data)[0]].length-1]['date'];
 		$scope.dateRange = dateRange;
   	});
 
@@ -63,16 +63,10 @@ var getAttrData = function(date, data, attr){
 		return
 	}
 
-	/*var vals = [];
-	var obj = {}
-	obj['username'] = "MisfitUser";
-	obj[attr] = data['MisfitUser'][dateIdx][attr];
-	vals.push(obj);
-
-	var testUsers = data['TestUsers'];*/
 
 	var vals = [];
 	Object.keys(data).forEach(function(key){
+		console.log(key);
 		var obj = {}
 		obj['username'] = key;
 		obj[attr] = data[key][dateIdx][attr];
@@ -115,7 +109,19 @@ var getAttrDataTotal = function(data, attr){
 		return a < b ? 1 : (a > b ? -1 : 0);
 	});
 
-	console.log(JSON.stringify(vals));
+	var misfitUser = vals[0];
+	vals.shift();
+	var inserted = false;
+	for(var i = 0; i < vals.length; i++){
+		if(parseFloat(vals[i][attr]) < parseFloat(misfitUser[attr])){
+			vals.splice(i,0,misfitUser);
+			inserted = true;
+			break;
+		}
+	}
+	if(!inserted)
+		vals.push(misfitUser);
+
 	return vals;
 }
 

@@ -3,11 +3,60 @@
     src: url('../fonts/Gotham/Gotham-Medium.otf');
     font-weight: normal;
     font-style: normal;
+}
 
+@font-face {
+    font-family: 'Gotham-Light';
+    src: url('../fonts/Gotham/Gotham-Light.otf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Gotham-Bold';
+    src: url('../fonts/Gotham/Gotham-Black.otf');
+    font-weight: normal;
+    font-style: normal;
 }
 
 body{
 	font-family: 'Gotham';
+	margin-left: 20px;
+	background-color: #F2F3F7;
+}
+
+#header{
+	background-color: #4A4A4A;
+	color: white;
+	width: 100%;
+	padding: 10px;
+	padding-left: 40px;
+	font-size: 24pt;
+	font-family: 'Gotham-Black';
+}
+
+#toolbar{
+	padding: 0px;
+	margin-left: -30px;
+}
+
+#leaderboardGrid{
+	font-family: 'Gotham-Light';
+	background-color: white;
+	padding: 20px;
+	margin-bottom: 50px;
+	margin-right: -10px;
+}
+
+#leaderboardGrid h2{
+	margin-bottom: 20px;
+	margin-top: 5px;
+	margin-left: 20px;
+}
+
+#chartHolder{
+	font-family: 'Gotham-Light';
+	margin-top: 75px;
 }
 
 .chart{
@@ -17,7 +66,7 @@ body{
 
 .myGrid {
     width: 700px;
-    height: 500px;
+    height: 600px;
 }
 
 #toolbar{

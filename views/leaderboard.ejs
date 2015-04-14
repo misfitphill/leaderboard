@@ -14,7 +14,9 @@
 	</head>
 	<body ng-app="LeaderboardModule" class="row" ng-cloak>
 		<div class="col-md-12">
-			<h1>Leaderboard</h1>
+			<div id="header">
+				<h1>Leaderboard</h1>
+			</div>
 
 			<div class="col-md-6">
 				<div id="toolbar">
@@ -30,16 +32,14 @@
 					</div>
 				</div>
 				
-				<div ng-controller="LeaderboardController">
+				<div id="leaderboardGrid" ng-controller="LeaderboardController">
 					<h2>{{dateRange}}</h2>
-		  				<div ui-grid="gridOptions" ui-grid-selection class="myGrid"></div>
+		  			<div ui-grid="gridOptions" ui-grid-selection class="myGrid"></div>
 				</div>
 				<p>{{selectedItems}}</p>
 			</div>
-			<div class="col-md-6" ng-controller="ChartCtrl">
+			<div id="chartHolder" class="col-md-6" ng-controller="ChartCtrl">
 				<div google-chart chart="chartObject" style="height:700px; width:100%;"></div>
-					<!--<div class="chart" ac-chart="'bar'", ac-data="chartData" ac-config="chartConfig"></div>
-					<canvas id="bar" class="chart chart-bar" data="data" labels="labels"></canvas> -->
 			</div>
 		</div>
 
@@ -55,7 +55,6 @@
 		<script src="/js/public/leaderboard/LeaderboardController.js"></script>
 		<script src="/js/public/leaderboard/ChartCtrl.js"></script>
 		<script src="/js/public/leaderboard/DropdownCtrl.js"></script>
-		<script src="/js/public/leaderboard/ProgressCtrl.js"></script>
 		<!--SCRIPTS END-->
 	</body>
 </html>

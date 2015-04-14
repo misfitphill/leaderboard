@@ -2,6 +2,7 @@ angular.module('LeaderboardModule').controller('ChartCtrl', ['$scope','UserServi
 
 	var userData;
 	var attr;
+	var username;
 
 	UserService.setScope('chart',$scope);
 
@@ -11,6 +12,7 @@ angular.module('LeaderboardModule').controller('ChartCtrl', ['$scope','UserServi
 		
 		userData = args.data;
 		attr = args.attr;
+		username = args.username;
 		var filtered = getAttrData(userData,attr);
 	    $scope.updateChart(userData,attr);
 	});
@@ -27,8 +29,12 @@ angular.module('LeaderboardModule').controller('ChartCtrl', ['$scope','UserServi
 	        {id: "a", label: 'Points', type: "number"}
 	    ], "rows": filtered};
 	        $scope.chartObject.type = 'ColumnChart';
+
+	    var title = 'Daily ' + (attr.charAt(0).toUpperCase() + attr.slice(1)) + ' Breakdown for ' + username;
+	    if(attr === 'distance')
+	    	title += ' (in miles)'
 	    $scope.chartObject.options = {
-	        'title': 'Daily ' + (attr.charAt(0).toUpperCase() + attr.slice(1)) + ' Breakdown',
+	        'title': title,
 	        legend: { position: "none" }
 	    }
 	};

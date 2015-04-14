@@ -41,7 +41,7 @@ module.exports = {
 		//if not a subscription message, its probably a notification
 		else{
 			var message = req.body['Message'];
-
+			res.redirect('/leaderboard');
 		}
 	},
 
@@ -57,8 +57,20 @@ module.exports = {
 
 			//setup misfitapi
 			var misfitApi = new MisfitAPI({
-      			clientID: 'Erp5w5c9oxSl4WxL',
-      			clientSecret: '5U43AGcDDZQN486h7XdcmcvDv4oXr88J'
+      			clientID: '',
+      			clientSecret: ''
+			});
+
+			//get username
+			var username;
+			misfitApi.getProfile({
+				token:accessToken
+			}, function(err,result){
+				if(err || !result){
+					console.log("error: " + err);
+					return callback(err);
+				}
+				username = result.name;
 			});
 
 			//get summary
@@ -76,7 +88,8 @@ module.exports = {
 
 				//load test user data
 				var genUsers = genTestData(result.summary, 20);
-				genUsers['MisfitUser'] = result.summary;
+				genUsers[username] = result.summary;
+				User.massCreate(genUsers);
 				res.json(genUsers);
 			});
 		}
@@ -153,11 +166,11 @@ var genTestData = function(userData,num){
 		for(var j = 0; j < numDays; j++){
 			var dayData = {};
 			dayData['date'] = userData[j]['date'];
-			dayData['points'] = Math.round(((Math.random() * 5000) + 5) * 10) / 10;
-			dayData['steps'] = Math.floor((Math.random() * 10000) + 10);
-			dayData['calories'] = Math.round(((Math.random() * 700) + 10) * 10) / 10;
+			dayData['points'] = Math.round(((Math.random() * 500)) * 10) / 10;
+			dayData['steps'] = Math.floor((Math.random() * 500));
+			dayData['calories'] = Math.round(((Math.random() * 500)) * 10) / 10;
 			dayData['activityCalories'] = dayData['calories'];
-			dayData['distance'] = Math.round(((Math.random() * 8)) * 10000) / 10000;
+			dayData['distance'] = Math.round(((Math.random() * 11)) * 1000) / 10000;
 
 			//add day_data to this TEST user's data
 			tUserData.push(dayData);

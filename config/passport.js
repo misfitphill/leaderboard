@@ -21,8 +21,8 @@ module.exports.passport = {
     protocol: 'oauth2',
     strategy: require('passport-misfit').Strategy,
     options:{
-      clientID: 'Erp5w5c9oxSl4WxL',
-      clientSecret: '5U43AGcDDZQN486h7XdcmcvDv4oXr88J',
+      clientID: '',
+      clientSecret: '',
       callbackURL: 'http://localhost:1337/auth/misfit/callback'
     },
     scope: ['user']
